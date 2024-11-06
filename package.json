@@ -1,6 +1,6 @@
 {
   "name": "killportall",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A cross-platform Node.js CLI tool for efficiently killing processes on specified ports",
   "type": "module",
   "main": "bin/killportall.js",
