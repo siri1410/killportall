@@ -2,6 +2,11 @@
 
 A powerful cross-platform Node.js CLI tool for efficiently killing processes on specified ports with detailed logging and interactive mode.
 
+[![npm version](https://badge.fury.io/js/killportall.svg)](https://badge.fury.io/js/killportall)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/node/v/killportall.svg)](https://nodejs.org)
+[![Downloads](https://img.shields.io/npm/dm/killportall.svg)](https://www.npmjs.com/package/killportall)
+
 ## Features
 
 - 🎯 Kill processes on single or multiple ports
@@ -12,54 +17,92 @@ A powerful cross-platform Node.js CLI tool for efficiently killing processes on 
 - 🖥️ Cross-platform support (Windows, macOS, Linux)
 - 🎨 JSON output format for scripting
 - 🚀 Fast and efficient port killing
+- 🔍 Debug mode for troubleshooting
+- 🛡️ Robust error handling
+
+## Quick Start
+
+```bash
+# Install globally
+npm install -g killportall
+
+# Kill a single port
+killportall 3000
+
+# Kill multiple ports
+killportall 3000 8080 5000
+
+# Interactive mode
+killportall -i
+```
 
 ## Installation
 
+### Global Installation (Recommended)
 ```bash
 npm install -g killportall
 ```
 
+### Local Installation
+```bash
+npm install killportall
+```
+
+### Development Setup
+```bash
+# Clone the repository
+git clone https://github.com/siri1410/killportall.git
+
+# Install dependencies
+cd killportall
+npm install
+
+# Link for development
+npm link
+```
+
 ## Usage
 
-### Basic Usage
+### Basic Commands
 
-Kill a single port:
 ```bash
+# Kill a single port
 killportall 3000
-```
 
-Kill multiple ports:
-```bash
+# Kill multiple ports
 killportall 3000 8080 5000
-```
 
-Kill a range of ports:
-```bash
+# Kill a range of ports
 killportall 3000-3005
-```
 
-### Interactive Mode
-
-Run in interactive mode to select ports from a list:
-```bash
+# Interactive mode
 killportall -i
-# or
-killportall --interactive
+
+# JSON output
+killportall 3000 --json
+
+# With retries
+killportall 3000 --retries 5
+
+# With custom timeout
+killportall 3000 --timeout 2000
 ```
 
-### Options
+### Command Line Options
 
-- `-r, --retries <number>`: Number of retry attempts (default: 3)
-- `-t, --timeout <ms>`: Timeout between retries in milliseconds (default: 1000)
-- `-i, --interactive`: Run in interactive mode
-- `-j, --json`: Output results in JSON format
-- `--config <key=value>`: Set a configuration value
-- `-v, --version`: Display version number
-- `-h, --help`: Display help information
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-r, --retries <number>` | Number of retry attempts | 3 |
+| `-t, --timeout <ms>` | Timeout between retries | 1000 |
+| `-i, --interactive` | Run in interactive mode | false |
+| `-j, --json` | Output results in JSON format | false |
+| `--config <key=value>` | Set configuration value | - |
+| `-v, --version` | Display version number | - |
+| `-h, --help` | Display help information | - |
 
 ### Configuration
 
-The tool supports configuration through a `.killportallrc.json` file in either the current directory or your home directory. Available configuration options:
+Create a `.killportallrc.json` file in your home or project directory:
 
 ```json
 {
@@ -70,65 +113,111 @@ The tool supports configuration through a `.killportallrc.json` file in either t
 }
 ```
 
-Set configuration values using the CLI:
+### Debug Mode
+
 ```bash
-killportall --config retries=5
-killportall --config timeout=2000
-killportall --config interactive=true
-killportall --config outputFormat=json
+# Enable debug logging
+DEBUG=killportall:* killportall 3000
+
+# Enable specific debug categories
+DEBUG=killportall:cli,killportall:config killportall 3000
 ```
 
-## Process Information
+## API Usage
 
-Before killing a process, the tool displays detailed information:
-- Process ID (PID)
-- Process name/command
-- User (on Unix-like systems)
-- CPU usage
-- Memory usage
+```javascript
+import { killPorts } from 'killportall';
 
-## Output Formats
-
-### Text Output (Default)
-```
-✓ Port 3000: Process killed successfully
-✗ Port 8080: No process found
-```
-
-### JSON Output
-```json
-[
-  {
-    "port": 3000,
-    "success": true
-  },
-  {
-    "port": 8080,
-    "success": false,
-    "error": "No process found"
-  }
-]
+async function cleanupPorts() {
+    try {
+        const results = await killPorts([3000, 3001], {
+            retries: 3,
+            timeout: 1000
+        });
+        console.log('Results:', results);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 ```
 
 ## Error Handling
 
-The tool includes robust error handling:
-- Invalid port numbers
-- Permission issues
-- Process not found
+The tool handles various error scenarios:
+- Invalid port numbers (outside 1-65535 range)
+- Permission issues (requires elevated privileges)
+- Process not found on port
 - Failed kill attempts
-
-## Debug Mode
-
-Enable debug logging:
-```bash
-DEBUG=killportall:* killportall 3000
-```
+- Configuration errors
+- Network interface issues
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow ESM module syntax
+- Maintain cross-platform compatibility
+- Add tests for new features
+- Update documentation
+- Follow semantic versioning
+
+## Publication Steps
+
+### For Maintainers
+
+1. Prepare for publication:
+```bash
+npm version patch  # or minor/major
+npm test
+npm login
+```
+
+2. Test locally:
+```bash
+npm link
+killportall --version
+```
+
+3. Publish:
+```bash
+npm run clean
+npm run link
+
+npm run reset
+npm run setup
+
+npm publish
+# or for beta
+npm publish --tag beta
+```
+
+4. Create release:
+```bash
+git tag v1.0.3
+git push origin v1.0.3
+```
+
+## Version Guidelines
+
+- MAJOR (1.x.x): Breaking changes
+- MINOR (x.1.x): New features (backward compatible)
+- PATCH (x.x.1): Bug fixes (backward compatible)
 
 ## License
 
-This project is licensed under the SDODS License - see the [LICENSE](LICENSE) file for details.
+MIT © [Sireesh Yarlagadda](https://github.com/siri1410)
+
+## Support
+
+- GitHub Issues: [Report Bug](https://github.com/siri1410/killportall/issues)
+- Email: contact@yarlis.com
+
+## Acknowledgments
+
+- Cross-platform support inspired by Node.js community
+- CLI design influenced by popular tools like npm and yarn

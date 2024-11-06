@@ -1,22 +1,51 @@
 {
   "name": "killportall",
-  "version": "1.0.0",
+  "version": "1.0.3",
+  "description": "A cross-platform Node.js CLI tool for efficiently killing processes on specified ports",
   "type": "module",
   "main": "bin/killportall.js",
   "bin": {
-    "killportall": "bin/killportall.js"
+    "killportall": "./bin/killportall.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
   },
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "node bin/killportall.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache",
+    "start": "node bin/killportall.js",
+    "prepublishOnly": "npm test",
+    "postinstall": "chmod +x bin/killportall.js",
+    "preinstall": "node -e \"if(process.env.npm_config_global) { process.exit(0) }\"",
+    "setup": "chmod +x bin/killportall.js && npm link --force",
+    "clean": "npm unlink -g killportall || true",
+    "reset": "npm run clean && npm run setup",
+    "link": "npm link --force"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "A cross-platform Node.js CLI tool for efficiently killing processes on specified ports",
+  "keywords": [
+    "port",
+    "kill",
+    "process",
+    "cli",
+    "allportkill",
+    "killportall",
+    "portkill",
+    "portkillall",
+    "cross-platform"
+  ],
+  "author": "contact@yarlis.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/siri1410/killportall/issues"
+  },
+  "homepage": "https://github.com/siri1410/killportall#readme",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",

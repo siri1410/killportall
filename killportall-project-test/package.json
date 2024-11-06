@@ -1,0 +1,14 @@
+{
+  "name": "killportall-project-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "./setup-test.sh",
+    "test": "./test-all.sh",
+    "start-servers": "node test-servers.js",
+    "pretest": "npm run setup"
+  },
+  "dependencies": {
+    "killportall": "file:../"
+  }
+}
